@@ -36,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
         task.setDueDate(taskRequest.getDueDate());
 
         // Fetch and set the project
-        Project project = projectRepository.findById(taskRequest.getProjectId())
+        Project project = projectRepository.findProjectByIdWithoutRelations(taskRequest.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found"));
         task.setProject(project);
 

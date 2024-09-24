@@ -5,6 +5,7 @@ import com.example.Automated.Task.Management.Model.Role;
 import com.example.Automated.Task.Management.Model.Users;
 import com.example.Automated.Task.Management.Services.RoleService;
 import com.example.Automated.Task.Management.Services.UserService;
+import com.example.Automated.Task.Management.dto.UserDTO;
 import com.example.Automated.Task.Management.dto.UserRegistrationDto;
 import com.example.Automated.Task.Management.exception.InvalidPasswordException;
 import com.example.Automated.Task.Management.exception.ResourceNotFoundException;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -73,9 +75,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return userRepository.findByUsername(username);
     }
 
-    public List<Users> getEmployees() {
-        Role employeeRole = roleRepository.findRoleByName("EMPLOYEE").orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-        return userRepository.findByRole(employeeRole);
+    public List<UserDTO> getEmployees() {
+        Role employeeRole = roleRepository.findRoleByName("EMPLOYEE")
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+        List<Users> employees = userRepository.findByRole(employeeRole);
+        return employees.stream()
+                .map(user -> new UserDTO(user.getId(), user.getUsername()))
+                .collect(Collectors.toList());
     }
 
     public List<Users> getProjectManagers() {

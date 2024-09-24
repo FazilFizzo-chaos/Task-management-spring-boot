@@ -6,6 +6,7 @@ import com.example.Automated.Task.Management.Services.impl.ProjectServiceImpl;
 import com.example.Automated.Task.Management.Services.impl.UserServiceImpl;
 import com.example.Automated.Task.Management.dto.ProjectRequest;
 import com.example.Automated.Task.Management.dto.ProjectUpdateRequest;
+import com.example.Automated.Task.Management.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,7 @@ public class ProjectController {
     }
 
     //Retrieve a project by id
+    @PreAuthorize("hasRole('PROJECT_MANAGER')")
     @GetMapping("/projects/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
         Project project = projectService.getProjectById(id);
@@ -62,7 +64,7 @@ public class ProjectController {
     }
 
     @GetMapping("/employees")
-    public List<Users> getAllEmployees() { return userService.getEmployees(); }
+    public List<UserDTO> getAllEmployees() { return userService.getEmployees(); }
 
     @GetMapping("/project-managers")
     public List<Users> getAllProjectManagers() {

@@ -8,7 +8,6 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -59,4 +58,14 @@ public class Task {
     @LastModifiedDate
     private LocalDateTime lastModifiedAt;
 
+    public Task(String name, Long id, String description, TaskStatus status, LocalDateTime startDate, LocalDateTime dueDate, Project project, Users assignedTo) {
+        this.name = name;
+        this.id = id;
+        this.description = description;
+        this.status = status;
+        this.startDate = startDate;
+        this.dueDate = dueDate;
+        this.project = project;
+        this.assignedTo = assignedTo;
+    }
 }

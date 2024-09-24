@@ -72,11 +72,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public List<Project> getAllProjects() {
-        return projectRepository.findAll();
+        return projectRepository.findAllProjects();
     }
 
     public Project getProjectById(Long id) {
-        return projectRepository.findById(id)
+        return projectRepository.findProjectByIdWithoutRelations(id)
                 .orElseThrow(() -> new ProjectNotFound("ProjectNotFound"));
     }
 

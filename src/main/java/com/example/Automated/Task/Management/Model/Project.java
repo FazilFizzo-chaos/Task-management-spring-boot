@@ -77,5 +77,15 @@ public class Project {
     @LastModifiedDate
     private LocalDateTime lastModifiedAt;
 
+    public Project(Long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate, ProjectStatus status, BigDecimal budget) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.status = status;
+        this.budget = budget;
+    }
+
 }
 
