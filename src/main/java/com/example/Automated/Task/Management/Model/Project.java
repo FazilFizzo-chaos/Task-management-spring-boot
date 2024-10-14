@@ -1,5 +1,6 @@
 package com.example.Automated.Task.Management.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -36,10 +37,10 @@ public class Project {
     private String description;
 
     @Column
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     private ProjectStatus status;
@@ -66,18 +67,22 @@ public class Project {
     private Double progress;
 
     @CreatedBy
+    @JsonIgnore
     private String createdBy;
 
     @CreatedDate
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     @LastModifiedBy
+    @JsonIgnore
     private String lastModifiedBy;
 
     @LastModifiedDate
+    @JsonIgnore
     private LocalDateTime lastModifiedAt;
 
-    public Project(Long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate, ProjectStatus status, BigDecimal budget) {
+    public Project(Long id, String name, String description, LocalDate startDate, LocalDate endDate, ProjectStatus status, BigDecimal budget) {
         this.id = id;
         this.name = name;
         this.description = description;

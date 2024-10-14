@@ -14,7 +14,6 @@ import java.util.Set;
 public class ProjectUpdateRequest {
     private Long projectId;
     private String projectName;
-    private Long projectManagerId;
     private Set<Long> assignedEmployeeIds;
     private List<TaskRequest> tasks;
 }

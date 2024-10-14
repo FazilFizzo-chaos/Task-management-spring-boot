@@ -1,6 +1,7 @@
 package com.example.Automated.Task.Management.Services.impl;
 
 import com.example.Automated.Task.Management.Model.Project;
+import com.example.Automated.Task.Management.Model.ProjectStatus;
 import com.example.Automated.Task.Management.Model.Task;
 import com.example.Automated.Task.Management.Model.Users;
 import com.example.Automated.Task.Management.Services.ProjectService;
@@ -9,6 +10,7 @@ import com.example.Automated.Task.Management.dto.ProjectUpdateRequest;
 import com.example.Automated.Task.Management.dto.TaskReq;
 import com.example.Automated.Task.Management.dto.TaskRequest;
 import com.example.Automated.Task.Management.exception.ProjectNotFound;
+import com.example.Automated.Task.Management.exception.ResourceNotFoundException;
 import com.example.Automated.Task.Management.repository.ProjectRepository;
 import com.example.Automated.Task.Management.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -30,28 +32,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public Project createProject(ProjectRequest projectRequest) {
-        // Fetch the project manager
-//        Users projectManager = userRepository.findById(projectRequest.getProjectManagerId())
-//                .orElseThrow(() -> new RuntimeException("Manager not found"));
-
         // Create a new project
         Project project = new Project();
-//        project.setProjectManager(projectManager);
         project.setName(projectRequest.getProjectName());
         project.setDescription(projectRequest.getDescription());
         project.setStartDate(projectRequest.getStartDate());
         project.setEndDate(projectRequest.getEndDate());
         project.setBudget(projectRequest.getBudget());
         project.setStatus(projectRequest.getStatus());
-
-        // Fetch and assign employees
-        Set<Users> assignedEmployees = new HashSet<>();
-        for (Long employeeId : projectRequest.getAssignedEmployeeIds()) {
-            Users employee = userRepository.findById(employeeId)
-                    .orElseThrow(() -> new RuntimeException("Employee not found"));
-            assignedEmployees.add(employee);
-        }
-        project.setAssignedEmployees(assignedEmployees);
 
         // Add tasks to the project
         Set<Task> tasks = new HashSet<>();
@@ -62,8 +50,17 @@ public class ProjectServiceImpl implements ProjectService {
             task.setStatus(taskRequest.getStatus());
             task.setStartDate(taskRequest.getStartDate());
             task.setDueDate(taskRequest.getDueDate());
-            task.setProject(project); // Associate task with the project
+
+
+            // Fetch and assign employees
+           String username = taskRequest.getAssignedEmployeeUsername();
+            Users assignedEmployee = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            task.setAssignedTo(assignedEmployee);
+
             tasks.add(task);
+
+            task.setProject(project);// Associate task with the project
         }
         project.setTasks(tasks);
 
@@ -87,11 +84,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         // Update project name
         project.setName(projectUpdateRequest.getProjectName());
-
-        // Update project manager
-        Users projectManager = userRepository.findById(projectUpdateRequest.getProjectManagerId())
-                .orElseThrow(() -> new RuntimeException("Manager not found"));
-        project.setProjectManager(projectManager);
 
         // Update assigned employees
         Set<Users> assignedEmployees = new HashSet<>();
@@ -120,5 +112,9 @@ public class ProjectServiceImpl implements ProjectService {
     public void deleteProject(Long id) {
         Project project = getProjectById(id);
         projectRepository.delete(project);
+    }
+
+    public List<Project> getProjectsByStatus(ProjectStatus projectStatus){
+        return projectRepository.findProjectsByStatus(projectStatus);
     }
 }

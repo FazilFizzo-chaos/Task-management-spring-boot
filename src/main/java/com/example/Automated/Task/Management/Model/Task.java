@@ -1,5 +1,6 @@
 package com.example.Automated.Task.Management.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -7,6 +8,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,10 +36,10 @@ public class Task {
     private TaskStatus status;  // Enum to track task status (e.g., OPEN, IN_PROGRESS, DONE)
 
     @Column
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
@@ -47,18 +50,22 @@ public class Task {
     private Users assignedTo;  // Relationship to the User entity
 
     @CreatedBy
+    @JsonIgnore
     private String createdBy;
 
     @CreatedDate
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     @LastModifiedBy
+    @JsonIgnore
     private String lastModifiedBy;
 
     @LastModifiedDate
+    @JsonIgnore
     private LocalDateTime lastModifiedAt;
 
-    public Task(String name, Long id, String description, TaskStatus status, LocalDateTime startDate, LocalDateTime dueDate, Project project, Users assignedTo) {
+    public Task(String name, Long id, String description, TaskStatus status, LocalDate startDate, LocalDate dueDate, Project project, Users assignedTo) {
         this.name = name;
         this.id = id;
         this.description = description;

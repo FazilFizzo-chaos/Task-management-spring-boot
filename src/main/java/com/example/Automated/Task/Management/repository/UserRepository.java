@@ -12,7 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<Users, Long> {
-    Users findByUsername(String username);
+
+
+    Optional<Users> findByUsername(String username);
 
     @Query("SELECT u FROM Users u JOIN u.roles r WHERE r = :role")
     List<Users> findByRole(@Param("role") Role role);

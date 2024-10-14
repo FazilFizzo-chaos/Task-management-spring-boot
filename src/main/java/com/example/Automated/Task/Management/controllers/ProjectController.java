@@ -1,7 +1,9 @@
 package com.example.Automated.Task.Management.controllers;
 
 import com.example.Automated.Task.Management.Model.Project;
+import com.example.Automated.Task.Management.Model.ProjectStatus;
 import com.example.Automated.Task.Management.Model.Users;
+import com.example.Automated.Task.Management.Services.impl.MetricsServiceImpl;
 import com.example.Automated.Task.Management.Services.impl.ProjectServiceImpl;
 import com.example.Automated.Task.Management.Services.impl.UserServiceImpl;
 import com.example.Automated.Task.Management.dto.ProjectRequest;
@@ -14,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pm")
@@ -25,9 +28,11 @@ public class ProjectController {
     @Autowired
     private UserServiceImpl userService;
 
+    @Autowired
+    private MetricsServiceImpl metricsService;
+
     //create a new project
-    @PreAuthorize("hasRole('PROJECT_MANAGER')")
-    @PostMapping
+    @PostMapping("/project")
     public ResponseEntity<Project> createProject(@RequestBody ProjectRequest project) {
         Project createdProject = projectService.createProject(project);
         return new ResponseEntity<>(createdProject, HttpStatus.CREATED);
@@ -69,6 +74,20 @@ public class ProjectController {
     @GetMapping("/project-managers")
     public List<Users> getAllProjectManagers() {
         return userService.getProjectManagers();
+    }
+
+    @GetMapping("/project-status")
+    public List<Project> getProjectsByStatus(@RequestParam ProjectStatus projectStatus) {
+        return projectService.getProjectsByStatus(projectStatus);
+    }
+
+    @GetMapping("/metrics/totals")
+    public Map<String, Object> getTotals() {
+        return Map.of(
+                "totalProjects", metricsService.getTotalProjects(),
+                "cancelledProjects", metricsService.getCancelledProjects(),
+                "plannedProjects", metricsService.getPlannedProjects()
+        );
     }
 }
 
