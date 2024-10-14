@@ -5,19 +5,19 @@ import com.example.Automated.Task.Management.Model.ProjectStatus;
 import com.example.Automated.Task.Management.Model.Task;
 import com.example.Automated.Task.Management.Model.Users;
 import com.example.Automated.Task.Management.Services.ProjectService;
-import com.example.Automated.Task.Management.dto.ProjectRequest;
-import com.example.Automated.Task.Management.dto.ProjectUpdateRequest;
-import com.example.Automated.Task.Management.dto.TaskReq;
-import com.example.Automated.Task.Management.dto.TaskRequest;
+import com.example.Automated.Task.Management.dto.*;
 import com.example.Automated.Task.Management.exception.ProjectNotFound;
 import com.example.Automated.Task.Management.exception.ResourceNotFoundException;
 import com.example.Automated.Task.Management.repository.ProjectRepository;
 import com.example.Automated.Task.Management.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service(value = "projectService")
 public class ProjectServiceImpl implements ProjectService {
@@ -26,9 +26,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final UserRepository userRepository;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, UserRepository userRepository) {
+
+    private final TaskServiceImpl taskService;
+
+    public ProjectServiceImpl(ProjectRepository projectRepository, UserRepository userRepository, TaskServiceImpl taskService) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+        this.taskService = taskService;
     }
 
     public Project createProject(ProjectRequest projectRequest) {
@@ -66,6 +70,25 @@ public class ProjectServiceImpl implements ProjectService {
 
         // Save the project (Cascade will save tasks automatically)
         return projectRepository.save(project);
+    }
+
+    public ProjectDTO convertToProjectDTO(Project project) {
+        ProjectDTO projectDTO = new ProjectDTO();
+        projectDTO.setId(project.getId());
+        projectDTO.setName(project.getName());
+        projectDTO.setDescription(project.getDescription());
+        projectDTO.setStartDate(project.getStartDate());
+        projectDTO.setEndDate(project.getEndDate());
+        projectDTO.setBudget(project.getBudget());
+        projectDTO.setProjectStatus(project.getStatus());
+
+        //convert Tasks
+        Set<TaskDTO> taskDTOs = project.getTasks().stream()
+                .map(taskService::convertToTaskDTO)
+                .collect(Collectors.toSet());
+        projectDTO.setTasks(taskDTOs);
+
+        return projectDTO;
     }
 
     public List<Project> getAllProjects() {

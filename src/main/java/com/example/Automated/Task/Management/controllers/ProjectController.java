@@ -6,6 +6,7 @@ import com.example.Automated.Task.Management.Model.Users;
 import com.example.Automated.Task.Management.Services.impl.MetricsServiceImpl;
 import com.example.Automated.Task.Management.Services.impl.ProjectServiceImpl;
 import com.example.Automated.Task.Management.Services.impl.UserServiceImpl;
+import com.example.Automated.Task.Management.dto.ProjectDTO;
 import com.example.Automated.Task.Management.dto.ProjectRequest;
 import com.example.Automated.Task.Management.dto.ProjectUpdateRequest;
 import com.example.Automated.Task.Management.dto.UserDTO;
@@ -33,9 +34,10 @@ public class ProjectController {
 
     //create a new project
     @PostMapping("/project")
-    public ResponseEntity<Project> createProject(@RequestBody ProjectRequest project) {
+    public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectRequest project) {
         Project createdProject = projectService.createProject(project);
-        return new ResponseEntity<>(createdProject, HttpStatus.CREATED);
+        ProjectDTO projectDTO = projectService.convertToProjectDTO(createdProject);
+        return new ResponseEntity<>(projectDTO, HttpStatus.CREATED);
     }
 
     //Retrieve all projects

@@ -5,6 +5,7 @@ import com.example.Automated.Task.Management.Model.Task;
 import com.example.Automated.Task.Management.Model.TaskStatus;
 import com.example.Automated.Task.Management.Model.Users;
 import com.example.Automated.Task.Management.Services.TaskService;
+import com.example.Automated.Task.Management.dto.TaskDTO;
 import com.example.Automated.Task.Management.dto.TaskRequest;
 import com.example.Automated.Task.Management.repository.ProjectRepository;
 import com.example.Automated.Task.Management.repository.TaskRepository;
@@ -47,6 +48,19 @@ public class TaskServiceImpl implements TaskService {
 
         // Save the task
         return taskRepository.save(task);
+    }
+
+    @Override
+    public TaskDTO convertToTaskDTO(Task task) {
+        TaskDTO taskDTO = new TaskDTO();
+        taskDTO.setId(task.getId());
+        taskDTO.setName(task.getName());
+        taskDTO.setDescription(task.getDescription());
+        taskDTO.setTaskStatus(task.getStatus());
+        taskDTO.setStartDate(task.getStartDate());
+        taskDTO.setDueDate(task.getDueDate());
+
+        return taskDTO;
     }
 
     // Update an existing task
