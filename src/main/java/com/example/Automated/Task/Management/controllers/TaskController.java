@@ -2,6 +2,7 @@ package com.example.Automated.Task.Management.controllers;
 
 import com.example.Automated.Task.Management.Model.Task;
 import com.example.Automated.Task.Management.Services.impl.TaskServiceImpl;
+import com.example.Automated.Task.Management.dto.EmployeeTaskDTO;
 import com.example.Automated.Task.Management.dto.TaskRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -46,6 +48,12 @@ public class TaskController {
     public ResponseEntity<List<Task>> getAllTasks() {
         List<Task> tasks = taskService.getAllTasks();
         return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
+    @GetMapping("/employee-task")
+    public ResponseEntity<Set<EmployeeTaskDTO>> getTaskOfLoggedInEmployee() {
+        Set<EmployeeTaskDTO> tasksForEmployee = taskService.getTaskForLoggedInEmployee();
+        return new ResponseEntity<>(tasksForEmployee, HttpStatus.OK);
     }
 
     // Delete a task by ID

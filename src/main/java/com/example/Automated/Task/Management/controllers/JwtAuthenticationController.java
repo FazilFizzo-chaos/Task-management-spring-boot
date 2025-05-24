@@ -80,5 +80,6 @@ public class JwtAuthenticationController {
     public Users saveUser(@Valid @RequestBody UserRegistrationDto userRegistrationDto){
         return userService.save(userRegistrationDto);
     }
+    
 }
 

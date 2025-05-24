@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     //service implementation for changing password for users
     @Override
-    public void changePassword(Long userid, String currentPassword, String newPassword) {
+    public void changePasswordForUser(Long userid, String currentPassword, String newPassword) {
         Users user = userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException("User Not Found"));
         if (!bcryptEncoder.matches(currentPassword, user.getPassword())) {
             throw new InvalidPasswordException("Current password is incorrect.");

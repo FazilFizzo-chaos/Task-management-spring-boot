@@ -39,7 +39,7 @@ public class Users {
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Task> tasksAssigned;// The tasks assigned to the user
+    private Set<Task> tasksAssigned;// The task(s) assigned to the user
 
     @OneToMany(mappedBy = "projectManager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Project> projects;         //project(s) assigned to user

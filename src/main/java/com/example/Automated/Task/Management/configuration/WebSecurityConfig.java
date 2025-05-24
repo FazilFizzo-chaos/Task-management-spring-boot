@@ -76,10 +76,11 @@ public class WebSecurityConfig {
                                         SessionCreationPolicy.STATELESS)) // (2)
                 .authorizeRequests(
                         auth ->
-                                auth.requestMatchers("/error", "/api/auth/authenticate", "/api/auth/register", "/api/roles", "/h2-console/**", "/actuator", "/actuator/*")
+                                auth.requestMatchers("/error", "/api/auth/authenticate", "/api/auth/register", "/h2-console/**", "/actuator", "/actuator/*")
                                         .permitAll()
                                         .requestMatchers(HttpMethod.OPTIONS,"/**")
                                         .permitAll()
+                                        .requestMatchers("/api/roles/**").hasRole("ADMIN")
                                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                         .requestMatchers("/api/pm/**").hasRole("PROJECT_MANAGER")
                                         .requestMatchers("/api/employee/**").hasRole("EMPLOYEE")

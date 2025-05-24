@@ -15,6 +15,6 @@ public interface UserService {
     List<UserDTO> getEmployees();
     Users save(UserRegistrationDto userRegistrationDto);
     Users updateUserRoles(Long id, Set<Role> role);
-    void changePassword(Long id, String currentPassword , String newPassword);
+    void changePasswordForUser(Long id, String currentPassword , String newPassword);
     void changeEmail(Long id, String currentEmail, String newEmail);
 }

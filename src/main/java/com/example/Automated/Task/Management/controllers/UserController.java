@@ -35,7 +35,7 @@ public class UserController {
             @RequestBody ChangePasswordRequest changePasswordRequest) {
         String newPassword = changePasswordRequest.getNewPassword();
         String currentPassword = changePasswordRequest.getCurrentPassword();
-         userService.changePassword(id, currentPassword, newPassword);
+         userService.changePasswordForUser(id, currentPassword, newPassword);
          return ResponseEntity.ok("Password changed Successfully");
     }
 

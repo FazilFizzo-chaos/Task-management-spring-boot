@@ -5,15 +5,20 @@ import com.example.Automated.Task.Management.Model.Task;
 import com.example.Automated.Task.Management.Model.TaskStatus;
 import com.example.Automated.Task.Management.Model.Users;
 import com.example.Automated.Task.Management.Services.TaskService;
+import com.example.Automated.Task.Management.dto.EmployeeTaskDTO;
 import com.example.Automated.Task.Management.dto.TaskDTO;
 import com.example.Automated.Task.Management.dto.TaskRequest;
 import com.example.Automated.Task.Management.repository.ProjectRepository;
 import com.example.Automated.Task.Management.repository.TaskRepository;
 import com.example.Automated.Task.Management.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service(value = "taskService")
 public class TaskServiceImpl implements TaskService {
@@ -62,6 +67,17 @@ public class TaskServiceImpl implements TaskService {
 
         return taskDTO;
     }
+
+   @Override
+   public Set<EmployeeTaskDTO> getTaskForLoggedInEmployee(){
+       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+         String username = authentication.getName();
+         Set<Task> taskList = taskRepository.findByEmployeeUsername(username);
+
+        return taskList.stream()
+                .map(listTask -> new EmployeeTaskDTO(listTask.getId(),listTask.getName(), listTask.getDescription(), listTask.getStartDate(), listTask.getDueDate()))
+                .collect(Collectors.toSet());
+   }
 
     // Update an existing task
     public Task updateTask(Long taskId, TaskRequest taskRequest) {
